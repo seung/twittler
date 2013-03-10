@@ -2,45 +2,92 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="styles.css" />
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+      <script src="./bootstrap/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" type="text/ccss" href="./bootstrap/css/bootstrap.min.css" />
     <script type="text/javascript" src="twitter_data.js"></script>
   </head>
   <body>
+    <input type="submit" class="refresh" value="refresh">
+    <input type="submit" class="stop" value="stop">
+    <br>
+    <h1> Twitter Feed </h1>
+    <div class="tweet_feed">
+
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Modal header</h3>
+      </div>
+      <div class="modal-body">
+        <p>One fine body…</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+
     <script>
-      setInterval(function(){
-        //var users = ['seung','tony'] => people we follow on twitter
-        //var streams = {
-        //'user': 'tony', 'home': ['my first tweet','my second'],
-        //'user': 'seung', 'home': ['my last tweet','seriously my last tweet']}
-        //streams.home => ['my first tweet', 'my second tweet','my last tweet','seriously my last tweet'] 
-        //streams.user => ['tony','seung']
-        //how to access tony? 
-        //streams.user[0] => TONY!!!!
-        //streams.user[1] =>Seung
-        //setInterval (function() {}, 1000)
 
-        var $body = $('body');
-        $body['html'](''); 
+      var scheduled = setInterval(function(){
+          // var users = ['seung','tony'] => people we follow on twitter
+          // var streams = {
+          // 'user': 'tony', 'home': ['my first tweet','my second'],
+          // 'user': 'seung', 'home': ['my last tweet','seriously my last tweet']}
+          // streams.home => ['my first tweet', 'my second tweet','my last tweet','seriously my last tweet'] 
+          // streams.user => ['tony','seung']
+          // how to access tony? 
+          // streams.user[0] => TONY!!!!
+          // streams.user[1] =>Seung
+          // setInterval (function() {}, 1000)
 
+         var $tweet_feed = $('.tweet_feed');
+        $tweet_feed['html']('');
         var allhtml = "";
-        //3 - last tweet 
-        var index = streams['home']['length'] - 1;
-        while(index >= 0){
-          //index = 3
-          //tweet = streams.home[3] = 'seriously my last tweet'
-          var tweet = streams['home'][index];
 
+        var index = streams['home']['length'] - 1;
+        var i = 0;
+        while(i <= index){
+          //var tweet = streams['home'][index];
+          var tweet = streams['home'][i];
           console['log']('rendering a tweet:', tweet);
-          // html = tweet.user = seung + ': ' + 
-          // random tweet because of the randomMessage();
+          var html = '<a href="#myModal" role="button" data-toggle="modal">' + tweet['user'] + '</a> : ' + tweet['message'] + '' + '<br/>' + '<small>' + tweet['created_at'] + '</small> ' + '<br/>';
+          allhtml += html;
+          i += 1;
+        }
+        $tweet_feed['html'](allhtml);
+
+      }, 3000);
+  
+    $('.refresh').click(function() {
+      //onclick fetch new tweets or...the most recent.
+      // location.reload();
+       var $tweet_feed = $('.tweet_feed');
+        $tweet_feed['html']('');
+        var allhtml = '';
+
+        var index = streams['home']['length'] - 1;
+        var i = 0;
+
+        while(i <= index){
+          var tweet = streams['home'][i];
+          console['log']('rendering a tweet:', tweet);
           var html = tweet['user'] + ': ' + tweet['message'] + '<br/>';
           allhtml += html;
-          index = index - 1;
+          i += 1;
         }
-        //set the html content of body to all concatenated strings
-        $body['html'](allhtm
+        $tweet_feed['html'](allhtml);
+    });
 
-      }, 2000);
+    $('.stop').click(function(e) {
+      window.clearInterval(scheduled)
+    });
+    
     </script>
   </body>
 </html>
