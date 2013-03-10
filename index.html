@@ -8,20 +8,37 @@
   <body>
     <script>
       setInterval(function(){
+        //var users = ['seung','tony'] => people we follow on twitter
+        //var streams = {
+        //'user': 'tony', 'home': ['my first tweet','my second'],
+        //'user': 'seung', 'home': ['my last tweet','seriously my last tweet']}
+        //streams.home => ['my first tweet', 'my second tweet','my last tweet','seriously my last tweet'] 
+        //streams.user => ['tony','seung']
+        //how to access tony? 
+        //streams.user[0] => TONY!!!!
+        //streams.user[1] =>Seung
+        //setInterval (function() {}, 1000)
 
         var $body = $('body');
-        $body['html']('');
-        var allhtml = "";
+        $body['html'](''); 
 
+        var allhtml = "";
+        //3 - last tweet 
         var index = streams['home']['length'] - 1;
         while(index >= 0){
+          //index = 3
+          //tweet = streams.home[3] = 'seriously my last tweet'
           var tweet = streams['home'][index];
+
           console['log']('rendering a tweet:', tweet);
+          // html = tweet.user = seung + ': ' + 
+          // random tweet because of the randomMessage();
           var html = tweet['user'] + ': ' + tweet['message'] + '<br/>';
           allhtml += html;
           index = index - 1;
         }
-        $body['html'](allhtml);
+        //set the html content of body to all concatenated strings
+        $body['html'](allhtm
 
       }, 2000);
     </script>
