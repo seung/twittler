@@ -1,3 +1,10 @@
 body {
   margin: 0px;
 }
+
+.container {
+  margin: 0 0 10px;
+  height: 800px;
+  border: 2px solid #696969;
+  padding: 15px;
+}

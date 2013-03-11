@@ -4,90 +4,97 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-      <script src="./bootstrap/js/bootstrap.min.js"></script>
-      <link rel="stylesheet" type="text/ccss" href="./bootstrap/css/bootstrap.min.css" />
-    <script type="text/javascript" src="twitter_data.js"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <script src="./js/moment.min.js"></script>
+    <link rel="stylesheet" type="text/ccss" href="./bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="./js/twitter_data.js"></script>
   </head>
   <body>
-    <input type="submit" class="refresh" value="refresh">
-    <input type="submit" class="stop" value="stop">
-    <br>
-    <h1> Twitter Feed </h1>
-    <div class="tweet_feed">
 
+    <div class="topbar">
+      <h1> Twittbler </h1>
+      <button class="btn btn-success refresh pull-right" data-dismiss="modal" aria-hidden="true">Refresh</button>
+      <button class="btn btn-primary tweet pull-right" data-dismiss="modal" aria-hidden="true">Tweet</button>
+    </div>
+
+
+    <!-- ////////// -->
+    <div class="container span12">
+      <h2> Timeline </h2>    
+      <section class="tweet_feed span12">
+        <!-- Tweets here -->
+      </section>
+      <section class="post_tweet">
+        <h3>Post Tweet</h3>
+        <textarea rows="3" class="span4"></textarea>
+      </section>
+      </div>
     </div>
 
     <!-- Modal -->
     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
         <h3 id="myModalLabel">Modal header</h3>
       </div>
       <div class="modal-body">
-        <p>One fine body…</p>
+        
       </div>
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save changes</button>
+        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
       </div>
     </div>
 
     <script>
+      var populateFeed = function(){
+          var $tweet_feed = $('.tweet_feed');
+          $tweet_feed['html']('');
+          var allhtml = "";
 
-      var scheduled = setInterval(function(){
-          // var users = ['seung','tony'] => people we follow on twitter
-          // var streams = {
-          // 'user': 'tony', 'home': ['my first tweet','my second'],
-          // 'user': 'seung', 'home': ['my last tweet','seriously my last tweet']}
-          // streams.home => ['my first tweet', 'my second tweet','my last tweet','seriously my last tweet'] 
-          // streams.user => ['tony','seung']
-          // how to access tony? 
-          // streams.user[0] => TONY!!!!
-          // streams.user[1] =>Seung
-          // setInterval (function() {}, 1000)
+          var index = streams['home']['length'] - 1;
+          console.log(index);
+          while(index >= 0){
+            var tweet = streams['home'][index];
+            console['log']('rendering a tweet:', tweet);
+            
+            var html = '<a href="#myModal" class="user_name" role="button" data-toggle="modal">' + tweet['user'] + '</a> : ' + tweet['message'] + '' + '<br/>' + tweet['created_at'] + '<br/>';
+            
+            allhtml += html;
+            index = index - 1;
+         }
+          $tweet_feed['html'](allhtml);
+      };
 
-         var $tweet_feed = $('.tweet_feed');
-        $tweet_feed['html']('');
-        var allhtml = "";
+       $('body').on('click', '.user_name', function(e){
+          var selected_user = $(e.target).text();
+          
+          $("#myModalLabel").html(selected_user);
 
-        var index = streams['home']['length'] - 1;
-        var i = 0;
-        while(i <= index){
-          //var tweet = streams['home'][index];
-          var tweet = streams['home'][i];
-          console['log']('rendering a tweet:', tweet);
-          var html = '<a href="#myModal" role="button" data-toggle="modal">' + tweet['user'] + '</a> : ' + tweet['message'] + '' + '<br/>' + '<small>' + tweet['created_at'] + '</small> ' + '<br/>';
-          allhtml += html;
-          i += 1;
-        }
-        $tweet_feed['html'](allhtml);
+          var tweet_count = streams['users'][selected_user]['length'];
+      
+          console.log(tweet_count);
+          
 
-      }, 3000);
-  
-    $('.refresh').click(function() {
-      //onclick fetch new tweets or...the most recent.
-      // location.reload();
-       var $tweet_feed = $('.tweet_feed');
-        $tweet_feed['html']('');
-        var allhtml = '';
+          hstr = "";
 
-        var index = streams['home']['length'] - 1;
-        var i = 0;
+          for (var i=0; i < tweet_count; i++) {
+            var time_ago = streams['users'][selected_user][i]['created_at'];
+            var now = moment(time_ago).fromNow();
+            hstr += '<p>' + streams['users'][selected_user][i]['message'] + ' ' + now + '</p>';
+          }
 
-        while(i <= index){
-          var tweet = streams['home'][i];
-          console['log']('rendering a tweet:', tweet);
-          var html = tweet['user'] + ': ' + tweet['message'] + '<br/>';
-          allhtml += html;
-          i += 1;
-        }
-        $tweet_feed['html'](allhtml);
-    });
+          $(".modal-body").html(hstr);
+          
+       });
+       
+       $('.refresh').click(function(){
+          populateFeed();
+       });
 
-    $('.stop').click(function(e) {
-      window.clearInterval(scheduled)
-    });
-    
+       $(function(){
+          populateFeed();
+       });
+
     </script>
   </body>
 </html>
