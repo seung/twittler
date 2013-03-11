@@ -43,16 +43,19 @@ $('body').on('click', '.user_name', function(e){
     $(".modal-body").html(selected_user_tweets);
 });
  
+// Posts a tweet and refreshes feed 
 $('.send_tweet').click(function() {
   var user_input = $('.tweet_text').val();
   writeTweet(user_input);
   updateFeed();
 });
 
+// Refreshes feed
 $('.refresh').click(function(){
   updateFeed();
 });
 
+// On document load, populates feed
 $(function(){
   updateFeed();
 });

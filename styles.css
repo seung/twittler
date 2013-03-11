@@ -22,12 +22,14 @@ body {
 .tweet_feed{
   max-height: 350px;
   overflow: auto;
-  border: 1px solid;
+  border: 1px solid #d4d4d4;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .post_tweet{
-  border: 1px solid;
-  padding: 30px;
+  border: 1px solid #d4d4d4;
+  padding: 20px;
 }
 
 .navbar .btn, .navbar .btn-group {
