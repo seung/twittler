@@ -11,23 +11,23 @@
   </head>
   <body>
 
-    <div class="topbar">
-      <h1> Twittbler </h1>
-      <button class="btn btn-success refresh pull-right" data-dismiss="modal" aria-hidden="true">Refresh</button>
-      <button class="btn btn-primary tweet pull-right" data-dismiss="modal" aria-hidden="true">Tweet</button>
-    </div>
-
-
-    <!-- ////////// -->
     <div class="container span12">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="#"><h1> Twittbler </h1></a>
+          <button class="btn btn-info refresh" data-dismiss="modal" aria-hidden="true">Refresh</button>
+        </div>
+      </div>
       <h2> Timeline </h2>    
-      <section class="tweet_feed span12">
+      <section class="tweet_feed">
         <!-- Tweets here -->
       </section>
       <section class="post_tweet">
-        <h3>Post Tweet</h3>
-        <textarea rows="3" class="span4"></textarea>
+          <h3>Post A Tweet</h3>
+          <textarea rows="3" class="tweet_text span4"></textarea>
+          <button class="btn btn-primary send_tweet" aria-hidden="true">Tweet</button>
       </section>
+
       </div>
     </div>
 
@@ -46,55 +46,51 @@
     </div>
 
     <script>
-      var populateFeed = function(){
-          var $tweet_feed = $('.tweet_feed');
-          $tweet_feed['html']('');
-          var allhtml = "";
 
-          var index = streams['home']['length'] - 1;
-          console.log(index);
-          while(index >= 0){
-            var tweet = streams['home'][index];
-            console['log']('rendering a tweet:', tweet);
-            
-            var html = '<a href="#myModal" class="user_name" role="button" data-toggle="modal">' + tweet['user'] + '</a> : ' + tweet['message'] + '' + '<br/>' + tweet['created_at'] + '<br/>';
-            
-            allhtml += html;
-            index = index - 1;
-         }
-          $tweet_feed['html'](allhtml);
+      visitor = "me";
+
+      var updateFeed = function(){
+        var $tweet_feed = $('.tweet_feed');
+        $tweet_feed['html']('');
+        var index = streams['home']['length'] - 1;
+        var append_html = "";
+        while(index >= 0){
+          var tweet = streams['home'][index];
+          console['log']('rendering a tweet:', tweet);
+          var html = '<a href="#myModal" class="user_name" role="button" data-toggle="modal">' + tweet['user'] + '</a> : ' + tweet['message'] + '' + '<br/>' + tweet['created_at'] + '<br/>';
+          append_html += html;
+          index--;
+        }
+        $tweet_feed['html'](append_html);
       };
 
-       $('body').on('click', '.user_name', function(e){
-          var selected_user = $(e.target).text();
-          
-          $("#myModalLabel").html(selected_user);
+      $('body').on('click', '.user_name', function(e){
+        var user_clicked = $(e.target).text();
+        $("#myModalLabel").html(user_clicked);
+        var user_tweets = streams['users'][user_clicked];
+        var tweet_count = user_tweets['length'];
+        older_tweets = "";
+        for (var i=0; i < tweet_count; i++) {
+          var time_ago = user_tweets[i]['created_at'];
+          var now = moment(time_ago).fromNow();
+          older_tweets += '<p>' + tweet_count[i]['message'] + ' ' + now + '</p>';
+        }
+        $(".modal-body").html(older_tweets);
+      });
 
-          var tweet_count = streams['users'][selected_user]['length'];
-      
-          console.log(tweet_count);
-          
+      $('.send_tweet').click(function() {
+        var user_input = $('.tweet_text').val();
+        console.log(user_input);
+        writeTweet(user_input);
+      });
 
-          hstr = "";
+      $('.refresh').click(function(){
+        updateFeed();
+      });
 
-          for (var i=0; i < tweet_count; i++) {
-            var time_ago = streams['users'][selected_user][i]['created_at'];
-            var now = moment(time_ago).fromNow();
-            hstr += '<p>' + streams['users'][selected_user][i]['message'] + ' ' + now + '</p>';
-          }
-
-          $(".modal-body").html(hstr);
-          
-       });
-       
-       $('.refresh').click(function(){
-          populateFeed();
-       });
-
-       $(function(){
-          populateFeed();
-       });
-
+      $(function(){
+        updateFeed();
+      });
     </script>
   </body>
 </html>
