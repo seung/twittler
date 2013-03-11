@@ -64,18 +64,22 @@
         $tweet_feed['html'](append_html);
       };
 
+      var timeNow = function(created_at){
+
+      }
+
       $('body').on('click', '.user_name', function(e){
         var user_clicked = $(e.target).text();
         $("#myModalLabel").html(user_clicked);
         var user_tweets = streams['users'][user_clicked];
         var tweet_count = user_tweets['length'];
-        older_tweets = "";
+        selected_user_tweets = "";
         for (var i=0; i < tweet_count; i++) {
           var time_ago = user_tweets[i]['created_at'];
           var now = moment(time_ago).fromNow();
-          older_tweets += '<p>' + tweet_count[i]['message'] + ' ' + now + '</p>';
+          selected_user_tweets += '<p>' + tweet_count[i]['message'] + ' ' + now + '</p>';
         }
-        $(".modal-body").html(older_tweets);
+        $(".modal-body").html(selected_user_tweets);
       });
 
       $('.send_tweet').click(function() {
