@@ -1,5 +1,6 @@
 var visitor = "me";
 
+// Renders tweets to be displayed from twitter_data.js to tweet_feed
 var updateFeed = function(){
   var $tweet_feed = $('.tweet_feed');
   $tweet_feed.html('');
@@ -22,15 +23,22 @@ var updateFeed = function(){
   $tweet_feed['html'](append_html);
 };
 
+// Creates a modal label & modal body for any given username that is clicked. 
 $('body').on('click', '.user_name', function(e){
     var selected_user = $(e.target).text();
-    $("#myModalLabel").html(selected_user);
-    var tweet_count = streams.users[selected_user]['length'];
+    $("#myModalLabel").html(selected_user);   
+    var tweet_count = streams.users[selected_user].length;
     selected_user_tweets = "";
     for (var i=0; i < tweet_count; i++) {
-      var time_ago = streams.users[selected_user][i]['created_at'];
+      var time_ago = streams.users[selected_user][i].created_at;
       var now = moment(time_ago).fromNow();
-      selected_user_tweets += '<p>' + streams.users[selected_user][i]['message'] + ' ' + now + '</p>';
+      selected_user_tweets += 
+        '<p>' + 
+          streams.users[selected_user][i].message + ' ' +  '<br>'
+            + '<small>' + 
+              '<i>' + now + '</i>' +
+            '</small>' +
+        '</p>';
     }
     $(".modal-body").html(selected_user_tweets);
 });
